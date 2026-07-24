@@ -13,10 +13,9 @@ public class RulesPropertiesImpl implements RulesProperties {
     
     private final Map<RuleType, String> defaultGlobalRules;
 
-    public RulesPropertiesImpl(Properties properties) {
-        this.properties = properties;
-        this.defaultGlobalRules = properties.stringPropertyNames().stream()
-                .collect(Collectors.toMap(
+public RulesPropertiesImpl(Properties properties) {
+    this.defaultGlobalRules = properties.stringPropertyNames().stream()
+            .collect(Collectors.toMap(
                         rulePropertyName -> RuleType.fromValue(rulePropertyName.toUpperCase(Locale.ROOT)),
                         properties::getProperty));
     }
