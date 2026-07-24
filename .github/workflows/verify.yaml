@@ -433,6 +433,7 @@ jobs:
       - name: Evaluate gate
         env:
           LIFECYCLE_READY: ${{ needs.decide.outputs.lifecycle-ready }}
+          DECIDE_RESULT: ${{ needs.decide.result }}
           EVENT: ${{ github.event_name }}
           RESULTS: ${{ toJSON(needs.*.result) }}
         run: |
@@ -448,7 +449,10 @@ jobs:
           # On PRs, fail if lifecycle state does not allow merging.
           # "skip" means this run was triggered by a non-lifecycle label and
           # is not authoritative — let it pass without blocking.
-          if [ "$EVENT" != "push" ] && [ "$LIFECYCLE_READY" != "true" ] && [ "$LIFECYCLE_READY" != "skip" ]; then
+          if [ "$EVENT" != "push" ] \
+            && [ "$DECIDE_RESULT" != "skipped" ] \
+            && [ "$LIFECYCLE_READY" != "true" ] \
+            && [ "$LIFECYCLE_READY" != "skip" ]; then
             echo "::error::PR is not in a testable lifecycle state"
             exit 1
           fi
